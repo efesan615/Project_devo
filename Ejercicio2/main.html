@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<head>
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+	<style type="text/css">
+
+		div {
+		  text-align:center
+		}
+
+		input[type=text], select {
+			display: center;
+			margin : 0 auto;
+		  width: 50%;
+		  padding: 8px 6px;
+		  display: inline-block;
+		  border: 5px solid #ccc;
+		  border-radius: 10px;
+		  box-sizing: border-box;
+
+		}
+		.button {
+			position: relative;
+			left: 2px;
+			background-color: #A8E69C; /* Green */
+			border: none;
+			color: black;
+			padding: 8px 32px;
+			margin-top: 15px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			border: 1px solid #ccc;
+		  	border-radius: 10px;
+			font-size: 16px;
+		
+		}
+		h1 {
+		  text-align: center;
+		  text-transform: uppercase;
+		  color: #4CAF50;
+		}
+	</style>
+	<script>
+		var xmlhttp
+		var data_processed
+		function getData() {
+			// body...
+			if (window.XMLHttpRequest) {
+	            // code for IE7+, Firefox, Chrome, Opera, Safari
+	            xmlhttp = new XMLHttpRequest();
+	        } else {
+	            // code for IE6, IE5
+	            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	        }
+	        xmlhttp.onreadystatechange = function() {
+            	if (this.readyState == 4 && this.status == 200) {
+                	document.getElementById("response").innerHTML = this.responseText;
+            	}
+       		};
+       		var value = document.getElementById("values").value;
+
+       		parse_JSON(value)
+
+       		document.getElementById("test").innerHTML = data_processed.categ;
+		  	xmlhttp.open("GET","launch.php?categ="+data_processed.categ,true);
+        	xmlhttp.send();
+		}
+
+		function parse_JSON(data_raw)
+		{
+			var character = data_raw.charAt(2);
+			var data = JSON.parse(data_raw);
+			if ("d" in data){
+				var date = new Date(data.d).toISOString().substr(0, 10);;
+				var categ = String(data.cat).toUpperCase();
+				var score = data.value;
+
+
+			}
+			else if ("myDate" in data){
+				var date = new Date(data.myDate).toISOString().substr(0, 10);;
+				var categ = String(data.categ).toUpperCase();
+				var score = data.val;
+			}
+			else{
+				var str = data.raw;
+				var size = str.length;
+				var score = data.val;
+				var obtenidos = false;
+				var i = 0;
+				while ((i<size)){
+					var a = str.charAt(i);
+					if (isNaN(+str.substr(i))){
+						var year = str.substr(i,4)
+						if (!isNaN(+str.substr(i,4))){
+							if (str.charAt(i+4) == "-"){
+								var month = str.substr((i+5),2)
+								if (!isNaN(+str.substr((i+5),2))){
+									if (str.charAt(i+7) == "-"){
+										if (!isNaN(+str.substr((i+8),2))){
+											var date = str.substr(i,10);
+										}
+									}
+								}
+							}
+						}
+					}
+
+					if((str.charAt(i) == "#")&&(str.charAt(i+6))){
+						var categ = str.substr(i+1,5).toUpperCase();
+					}
+
+					i = i+1;
+				}
+			}
+			data_processed = {date:String(date), categ:String(categ),value:String(score)}
+			
+
+		}
+
+
+		function addData() {
+			// body...
+			if (window.XMLHttpRequest) {
+	            // code for IE7+, Firefox, Chrome, Opera, Safari
+	            xmlhttp = new XMLHttpRequest();
+	        } else {
+	            // code for IE6, IE5
+	            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	        }
+	        xmlhttp.onreadystatechange = function() {
+            	if (this.readyState == 4 && this.status == 200) {
+                	document.getElementById("response").innerHTML = this.responseText;
+            	}
+       		};
+       		var value = document.getElementById("values").value;
+
+       		parse_JSON(value)
+
+       		//document.getElementById("test").innerHTML = data_processed.date;
+		  	xmlhttp.open("GET","insert.php?categ="+data_processed.categ+"&date="+data_processed.date+"&value="+data_processed.value,true);
+        	xmlhttp.send();
+		}
+
+		function plot(){
+			if (window.XMLHttpRequest) {
+	            // code for IE7+, Firefox, Chrome, Opera, Safari
+	            xmlhttp = new XMLHttpRequest();
+	        } else {
+	            // code for IE6, IE5
+	            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+	        }
+	        xmlhttp.onreadystatechange = function() {
+            	if (this.readyState == 4 && this.status == 200) {
+                	document.getElementById("response").innerHTML = this.responseText;
+            	}
+       		};
+
+       		xmlhttp.open("GET","plot_line.php",true);
+       		xmlhttp.send();
+		}
+		
+	</script>
+</head>
+<body>
+	<div>
+		<h1>Data ploter JS</h1>
+		<br>
+		<input type="text" id="values">
+		<br>
+		<button class="button" onclick="addData()">Add data</button>
+		<button class="button" onclick="window.open('./plot_line.php'); return false">Plot results</button>
+		<p id="response"></p>
+		<p id="test"></p>
+	</div>
+
+</body>
+</html>

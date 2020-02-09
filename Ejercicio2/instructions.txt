@@ -1,0 +1,10 @@
+Requierements: this develop has been built on AJAX using "XAMPP". It's necesary to mount the files on a web server 
+for launching the app. For the graphs is also necessary to unzip the "koolreport.zip" folder on the same path thay contains the zip file.
+
+For the correct use of the program it's necessary to launch "main.html" file at first. Here is where the user can add
+new datasets with the required formats and plot data already added.
+
+The process to add the data is put on the input box the data and press the button "Add Data"
+
+The process to plot the data in the SQL database is pussing the button "Plot Data". The graphs will open on a new tab.
+
